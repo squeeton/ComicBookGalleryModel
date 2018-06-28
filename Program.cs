@@ -10,6 +10,7 @@ namespace ComicBookGalleryModel
     {
         static void Main(string[] args)
         {
+            Console.Write("heck");
         }
     }
 }

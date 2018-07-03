@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using System.Diagnostics;
 
 namespace ComicBookGalleryModel
 {
@@ -14,76 +15,31 @@ namespace ComicBookGalleryModel
         {
             using (var context = new Context())
             {
-                var series1 = new Series()
-                {
-                    Title = "The Amazing Spinder-Man"
-                };
 
-                var series2 = new Series()
-                {
-                    Title = "The Invincible Iron Man"
-                };
-
-                var artist1 = new Artist()
-                {
-                    Name = "Stan Lee"
-                };
-
-                var artist2 = new Artist()
-                {
-                    Name = "Steve Ditko"
-                };
-
-                var artist3= new Artist()
-                {
-                    Name = "Jack Kirby"
-                };
-                var comicBook1 = new ComicBook()
-                {
-                    Series = series1,
-                    IssueNumber = 1,
-                    PublishedOn = DateTime.Today
-                };
-                comicBook1.Artists.Add(artist1);
-                comicBook1.Artists.Add(artist2);
-
-                var comicBook2 = new ComicBook()
-                {
-                    Series = series1,
-                    IssueNumber = 2,
-                    PublishedOn = DateTime.Today
-                };
-                comicBook2.Artists.Add(artist1);
-                comicBook2.Artists.Add(artist2);
-
-                var comicBook3 = new ComicBook()
-                {
-                    Series = series2,
-                    IssueNumber = 1,
-                    PublishedOn = DateTime.Today
-                };
-                comicBook3.Artists.Add(artist1);
-                comicBook3.Artists.Add(artist3);
-
-                context.ComicBooks.Add(comicBook1);
-                context.ComicBooks.Add(comicBook2);
-                context.ComicBooks.Add(comicBook3);
-                context.SaveChanges();
+                context.Database.Log = (message) => Debug.WriteLine(message);
 
 
-                var comicBooks = context.ComicBooks
-                    .Include(cb => cb.Series)
-                    .Include(cb => cb.Artists)
-                    .ToList();
+                //var comicBooks = context.ComicBooks.ToList();
+                var comicBooksQuery = from cb in context.ComicBooks select cb;
+                var comicBooks = comicBooksQuery.ToList();
+                Console.WriteLine("# of comic books: {0}", comicBooks.Count);
 
-                foreach (var c in comicBooks)
-                {
-                    var artistNames = c.Artists.Select(a => a.Name).ToList();
-                    var artistDisplayText = string.Join(", ", artistNames);
+                //var comicBooks = context.ComicBooks
+                //    .Include(cb => cb.Series)
+                //    .Include(cb => cb.Artists.Select(a=>a.Artist))
+                //    .Include(cb=>cb.Artists.Select(a=>a.Role))
+                //    .ToList();
 
-                    Console.WriteLine(c.DisplayText);
-                    Console.WriteLine(artistDisplayText);
-                }
+                //foreach (var c in comicBooks)
+                //{
+                //    var artistRoleNames = c.Artists
+                //        .Select(a => $"{a.Artist.Name} - {a.Role.Name}")
+                //        .ToList();
+                //    var artistRoleDisplayText = string.Join(", ", artistRoleNames);
+
+                //    Console.WriteLine(c.DisplayText);
+                //    Console.WriteLine(artistRoleDisplayText);
+                //}
                 Console.ReadLine();
             }
             

@@ -7,17 +7,11 @@ using System.Threading.Tasks;
 
 namespace ComicBookGalleryModel.Models
 {
-    public class Artist
+    public class Role
     {
-        public Artist()
-        {
-            ComicBooks = new List<ComicBookArtist>();
-        }
-
         public int Id { get; set; }
-        [Required, StringLength(100)]
+        [Required, StringLength(50)]
         public string Name { get; set; }
 
-        public ICollection<ComicBookArtist> ComicBooks { get; set; }
     }
 }
